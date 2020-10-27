@@ -98,6 +98,8 @@ public class HbaseTest {
     }
 
     public static void addBatchData(String tableName, String rowkey, String cf, String column, String value, long count) throws IOException {
+        logger.info("addBatchData start");
+        long start = new Date().getTime();
 
         //加载配置
         Connection connection = ConnectionFactory.createConnection(conf);
@@ -108,7 +110,7 @@ public class HbaseTest {
         List<Put> puts = Lists.newArrayList();
         for (long i = 0; i < count; i++) {
             //b. 添加数据 put方式
-            Put put = new Put(Bytes.toBytes(rowkey));
+            Put put = new Put(Bytes.toBytes(rowkey + i));
 
             //c. 指定添加的列族 列 值
             put.addColumn(Bytes.toBytes(cf), Bytes.toBytes(column), Bytes.toBytes(value));
@@ -119,6 +121,7 @@ public class HbaseTest {
         //d. 写入表中
         table.put(puts);
         System.out.println("addBatchData----successful");
+        logger.info("addBatchData costs: " + (new Date().getTime() - start) / 1000);
     }
 
     public static void getData(String tableName, String rowkey, long count) throws IOException {
@@ -133,7 +136,7 @@ public class HbaseTest {
 
         for (long i = 0; i < count; i++) {
             //b. 添加数据 put方式
-            Get get = new Get(Bytes.toBytes(rowkey));
+            Get get = new Get(Bytes.toBytes(rowkey + i));
 
             //d. 写入表中
             table.get(get);
@@ -155,7 +158,7 @@ public class HbaseTest {
         List<Get> gets = Lists.newArrayList();
         for (long i = 0; i < count; i++) {
             //b. 添加数据 put方式
-            Get get = new Get(Bytes.toBytes(rowkey));
+            Get get = new Get(Bytes.toBytes(rowkey + i));
 
             gets.add(get);
         }
@@ -273,10 +276,12 @@ public class HbaseTest {
     public static void main(String[] args) throws IOException {
 
         /**1. 判断HBase中表是否存在*/
-        //System.out.println(isExist("user"));
+        if (isExist("create1")) {
+            deleteTable("create1");
+        }
 
         /**2. 在HBase中创建表*/
-        //createTable("create1", "info1", "info2", "info3");
+        createTable("create1", "info1", "info2", "info3");
 
         /**3. 向表中添加数据：列族 列 值*/
 //        addData("create1", "xiaoming", "info1", "age", "18");
@@ -284,7 +289,13 @@ public class HbaseTest {
 //        addData("create1", "xiaoming", "info2", "professional", "student");
 //        addData("create1", "xiaohong", "info2", "professional", "teacher");
 
-        addBatchData("create1", "xiaoming", "info1", "pro", "stu", 1000);
+        long count = 1000;
+
+        addBatchData("create1", "xiaoming", "info1", "pro", "stu", count);
+
+        getData("create1", "xiaoming", count);
+
+        getBatchData("create1", "xiaoming", count);
 
         /**4. 删除一个rowkey*/
         //        deleteRow("create", "xiaoming") ;
@@ -293,9 +304,9 @@ public class HbaseTest {
         //        deleteRows("create", "xiaoming", "xiaohong") ;
 
         /**6. 全表扫描*/
-        scanAll("create1");
+        //scanAll("create1");
 
         /**7. 删除表*/
-//        deleteTable("create2");
+
     }
 }
