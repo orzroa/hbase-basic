@@ -289,7 +289,7 @@ public class HbaseTest {
 //        addData("create1", "xiaoming", "info2", "professional", "student");
 //        addData("create1", "xiaohong", "info2", "professional", "teacher");
 
-        long count = 1000;
+        long count = 3000;
 
         addBatchData("create1", "xiaoming", "info1", "pro", "stu", count);
 
