@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -121,6 +122,8 @@ public class HbaseTest {
     }
 
     public static void getData(String tableName, String rowkey, long count) throws IOException {
+        logger.info("getData start");
+        long start = new Date().getTime();
 
         //加载配置
         Connection connection = ConnectionFactory.createConnection(conf);
@@ -136,9 +139,12 @@ public class HbaseTest {
             table.get(get);
         }
         System.out.println("getData----successful");
+        logger.info("getData costs: " + (new Date().getTime() - start) / 1000);
     }
 
     public static void getBatchData(String tableName, String rowkey, long count) throws IOException {
+        logger.info("getBatchData start");
+        long start = new Date().getTime();
 
         //加载配置
         Connection connection = ConnectionFactory.createConnection(conf);
@@ -157,6 +163,7 @@ public class HbaseTest {
         //d. 写入表中
         table.get(gets);
         System.out.println("getBatchData----successful");
+        logger.info("getBatchData costs: " + (new Date().getTime() - start) / 1000);
     }
 
     /**
@@ -277,7 +284,7 @@ public class HbaseTest {
 //        addData("create1", "xiaoming", "info2", "professional", "student");
 //        addData("create1", "xiaohong", "info2", "professional", "teacher");
 
-        addBatchData("create1", "xiaoming", "info", "pro", "stu", 1000);
+        addBatchData("create1", "xiaoming", "info1", "pro", "stu", 1000);
 
         /**4. 删除一个rowkey*/
         //        deleteRow("create", "xiaoming") ;
