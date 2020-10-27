@@ -1,5 +1,6 @@
 package com.example.hbase;
 
+import com.google.common.collect.Lists;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.*;
 import org.apache.hadoop.hbase.client.*;
@@ -93,7 +94,69 @@ public class HbaseTest {
         //d. 写入表中
         table.put(put);
         System.out.println("addData----successful");
+    }
 
+    public static void addBatchData(String tableName, String rowkey, String cf, String column, String value, long count) throws IOException {
+
+        //加载配置
+        Connection connection = ConnectionFactory.createConnection(conf);
+
+        //a. 指定表
+        Table table = connection.getTable(TableName.valueOf(tableName));
+
+        List<Put> puts = Lists.newArrayList();
+        for (long i = 0; i < count; i++) {
+            //b. 添加数据 put方式
+            Put put = new Put(Bytes.toBytes(rowkey));
+
+            //c. 指定添加的列族 列 值
+            put.addColumn(Bytes.toBytes(cf), Bytes.toBytes(column), Bytes.toBytes(value));
+
+            puts.add(put);
+        }
+
+        //d. 写入表中
+        table.put(puts);
+        System.out.println("addBatchData----successful");
+    }
+
+    public static void getData(String tableName, String rowkey, long count) throws IOException {
+
+        //加载配置
+        Connection connection = ConnectionFactory.createConnection(conf);
+
+        //a. 指定表
+        Table table = connection.getTable(TableName.valueOf(tableName));
+
+        for (long i = 0; i < count; i++) {
+            //b. 添加数据 put方式
+            Get get = new Get(Bytes.toBytes(rowkey));
+
+            //d. 写入表中
+            table.get(get);
+        }
+        System.out.println("getData----successful");
+    }
+
+    public static void getBatchData(String tableName, String rowkey, long count) throws IOException {
+
+        //加载配置
+        Connection connection = ConnectionFactory.createConnection(conf);
+
+        //a. 指定表
+        Table table = connection.getTable(TableName.valueOf(tableName));
+
+        List<Get> gets = Lists.newArrayList();
+        for (long i = 0; i < count; i++) {
+            //b. 添加数据 put方式
+            Get get = new Get(Bytes.toBytes(rowkey));
+
+            gets.add(get);
+        }
+
+        //d. 写入表中
+        table.get(gets);
+        System.out.println("getBatchData----successful");
     }
 
     /**
@@ -203,16 +266,18 @@ public class HbaseTest {
     public static void main(String[] args) throws IOException {
 
         /**1. 判断HBase中表是否存在*/
-        System.out.println(isExist("user"));
+        //System.out.println(isExist("user"));
 
         /**2. 在HBase中创建表*/
-        createTable("create1", "info1", "info2", "info3");
+        //createTable("create1", "info1", "info2", "info3");
 
         /**3. 向表中添加数据：列族 列 值*/
-        addData("create1", "xiaoming", "info1", "age", "18");
-        addData("create1", "xiaoming", "info1", "sex", "man");
-        addData("create1", "xiaoming", "info2", "professional", "student");
-        addData("create1", "xiaohong", "info2", "professional", "teacher");
+//        addData("create1", "xiaoming", "info1", "age", "18");
+//        addData("create1", "xiaoming", "info1", "sex", "man");
+//        addData("create1", "xiaoming", "info2", "professional", "student");
+//        addData("create1", "xiaohong", "info2", "professional", "teacher");
+
+        addBatchData("create1", "xiaoming", "info", "pro", "stu", 1000);
 
         /**4. 删除一个rowkey*/
         //        deleteRow("create", "xiaoming") ;
