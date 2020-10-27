@@ -121,7 +121,7 @@ public class HbaseTest {
         //d. 写入表中
         table.put(puts);
         System.out.println("addBatchData----successful");
-        logger.info("addBatchData costs: " + (new Date().getTime() - start) / 1000);
+        logger.info("addBatchData costs: " + (new Date().getTime() - start));
     }
 
     public static void getData(String tableName, String rowkey, long count) throws IOException {
@@ -142,7 +142,7 @@ public class HbaseTest {
             table.get(get);
         }
         System.out.println("getData----successful");
-        logger.info("getData costs: " + (new Date().getTime() - start) / 1000);
+        logger.info("getData costs: " + (new Date().getTime() - start));
     }
 
     public static void getBatchData(String tableName, String rowkey, long count) throws IOException {
@@ -166,7 +166,7 @@ public class HbaseTest {
         //d. 写入表中
         table.get(gets);
         System.out.println("getBatchData----successful");
-        logger.info("getBatchData costs: " + (new Date().getTime() - start) / 1000);
+        logger.info("getBatchData costs: " + (new Date().getTime() - start));
     }
 
     /**
